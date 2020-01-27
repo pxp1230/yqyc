@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>疫情确诊人数预测（非真实）</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js" defer></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.5/umd/popper.min.js" defer></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.1.0/js/bootstrap.min.js" defer></script>
+<script src="https://cdn.bootcss.com/blueimp-md5/2.12.0/js/md5.min.js" defer></script>
+<script src="abc.js" defer></script>
+
+<style type="text/css">
+body{
+position:fixed;
+top:0;
+right:0;
+bottom:0;
+left:0;
+}
+.center-vertical{
+position:relative;
+top:50%;
+transform:translateY(-50%);
+}
+input{
+resize:none;
+}
+p{
+word-break:break-all;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="container-fluid h-100">
+	<div class="row-fluid h-100">
+		<div class="col-12 center-vertical mx-auto" style="width:576px">
+			<h1>疫情确诊人数预测<h5 class="text-info">*基于 <span id="start">-</span> 前疫情数据进行多项式回归计算得出，非真实人数！</h5></h1>
+			<input type="date" class="form-control mh-100" id="content" autofocus></input>
+			<p class="text-info pt-1 text-justify" id="info">等待输入...</p>
+			<button class="btn btn-primary btn-block btn-lg" id="send-btn">开始计算</button>
+			<br/>
+			<p id="jgsj">全国确诊人数预测：</p>
+		</div>
+	</div>
+</div>
+
+
+</body>
+
+</html>
