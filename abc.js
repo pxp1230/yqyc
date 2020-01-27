@@ -1,7 +1,10 @@
 "use strict";
 $(function () {
-	var start_time = new Date('2020-01-27 16:48');
-	$("#start").text(start_time.toLocaleString());
+	var start_time =
+//1
+"2020.01.27 24:00";
+//2
+	$("#start").text(start_time);
 	
 	var now = new Date();
 	var day = ("0" + now.getDate()).slice(-2);
@@ -24,7 +27,10 @@ $(function () {
 			var days = i2.getTime()-new Date('2020/01/13').getTime();
 			var x = parseInt(days / (1000 * 60 * 60 * 24));
 			if(days>=0){
-				var y=42.7031733746128-13.3611816846734*x+3.54310302056111*x*x+1.32682091515283*x*x*x-0.172944541268835*x*x*x*x+0.0097905255219494*x*x*x*x*x;
+				var y=
+//3
+41.5410216718267-6.49852688591181*x-1.20551024053275*x*x+2.44404872733032*x*x*x-0.278820444261609*x*x*x*x+0.0132670477097719*x*x*x*x*x;
+//4
 				$("#info").text("完成！");
 				$("#jgsj").text("全国确诊人数预测："+parseInt(y)+" 人");
 			}else{
