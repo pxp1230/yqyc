@@ -53,9 +53,11 @@ namespace ConsoleApp1
                 item.x = DateTime.Parse("2020." + item.date).DayOfYear;
             }
             raw.Sort((a, b) => { return (int)(a.x - b.x); });
-            raw.RemoveAt(raw.Count - 1);
+
             double min = raw[0].x;
-            DateTime min_date = DateTime.Parse("2020." + raw[0].date);
+            DateTime max_date = DateTime.Parse("2020." + raw[raw.Count - 1].date + " 23:59");
+            if (DateTime.Now < max_date)
+                raw.RemoveAt(raw.Count - 1);
             foreach (var item in raw)
             {
                 item.x -= min;
