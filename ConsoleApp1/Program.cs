@@ -88,7 +88,7 @@ namespace ConsoleApp1
             if (jsFile != null)
             {
                 string jsTxt = File.ReadAllText(jsFile);
-                string d = "\"2020." + raw[raw.Count - 1].date + " 24:00\";";
+                string d = "\"2020/" + raw[raw.Count - 1].date + " 24:00\";";
 
                 Regex r1 = new Regex(@"//1\n.+\n//2\n");
                 jsTxt = r1.Replace(jsTxt, "//1\n" + d + "\n//2\n");
