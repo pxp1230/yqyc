@@ -21,10 +21,11 @@ namespace ConsoleApp1
         public string suspect;
         public string dead;
         public string heal;
+        public string hubeiConfirm;
     }
     class Program
     {
-        const string url1 = "https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_cn_day_counts";
+        const string url1 = "https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5";
         static void Main(string[] args)
         {
             string jsFile = null;
@@ -45,30 +46,42 @@ namespace ConsoleApp1
             }
 
             WebClient webClient = new WebClient();
-            string str1 = webClient.DownloadString(url1);
+            byte[] _str1 = webClient.DownloadData(url1);
+            string str1 = UTF8Encoding.UTF8.GetString(_str1);
             JObject json1 = JsonConvert.DeserializeObject<JObject>(str1);
-            List<DataRaw> raw = JsonConvert.DeserializeObject<List<DataRaw>>(json1["data"].ToString());
-            foreach (var item in raw)
+            JObject json2 = JsonConvert.DeserializeObject<JObject>(json1["data"].ToString());
+            List<DataRaw> chinaDayList = json2["chinaDayList"].ToObject<List<DataRaw>>();
+            JArray dailyDeadRateHistory = (JArray)json2["dailyDeadRateHistory"];
+            Dictionary<string, string> hubeiConfirmDict = new Dictionary<string, string>();
+            foreach (var item in dailyDeadRateHistory)
+            {
+                hubeiConfirmDict[item["date"].ToString()] = item["hubeiConfirm"].ToString();
+            }
+            foreach (var item in chinaDayList)
             {
                 item.x = DateTime.Parse("2020." + item.date).DayOfYear;
+                if (hubeiConfirmDict.ContainsKey(item.date))
+                    item.hubeiConfirm = hubeiConfirmDict[item.date];
+                else
+                    item.hubeiConfirm = "0";
             }
-            raw.Sort((a, b) => { return (int)(a.x - b.x); });
+            chinaDayList.Sort((a, b) => { return (int)(a.x - b.x); });
 
-            double min = raw[0].x;
-            DateTime max_date = DateTime.Parse("2020." + raw[raw.Count - 1].date + " 23:59");
+            double min = chinaDayList[0].x;
+            DateTime max_date = DateTime.Parse("2020." + chinaDayList[chinaDayList.Count - 1].date + " 23:59");
             if (DateTime.Now < max_date)
-                raw.RemoveAt(raw.Count - 1);
-            foreach (var item in raw)
+                chinaDayList.RemoveAt(chinaDayList.Count - 1);
+            foreach (var item in chinaDayList)
             {
                 item.x -= min;
-                item.y = int.Parse(item.confirm);
+                item.y = int.Parse(item.confirm) - int.Parse(item.hubeiConfirm);
             }
-            double[] xx = new double[raw.Count];
-            double[] yy = new double[raw.Count];
-            for (int i = 0; i < raw.Count; i++)
+            double[] xx = new double[chinaDayList.Count];
+            double[] yy = new double[chinaDayList.Count];
+            for (int i = 0; i < chinaDayList.Count; i++)
             {
-                xx[i] = raw[i].x;
-                yy[i] = raw[i].y;
+                xx[i] = chinaDayList[i].x;
+                yy[i] = chinaDayList[i].y;
                 //Console.WriteLine(item.x + " " + item.y);
             }
 
@@ -88,7 +101,7 @@ namespace ConsoleApp1
             if (jsFile != null)
             {
                 string jsTxt = File.ReadAllText(jsFile);
-                string d = "\"2020/" + raw[raw.Count - 1].date + " 24:00\";";
+                string d = "\"2020." + chinaDayList[chinaDayList.Count - 1].date + " 24:00\";";
 
                 Regex r1 = new Regex(@"//1\n.+\n//2\n");
                 jsTxt = r1.Replace(jsTxt, "//1\n" + d + "\n//2\n");

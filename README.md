@@ -4,10 +4,14 @@
 
 由于国家的延缓发布，当日的真实疫情可能会在第二天的九点左右发布，所以我会在每天九点以后才更新它，有时候也会忘记更新。
 
+2020.02.13湖北疫情数据产生巨大波动，使曲线不再平滑，这里减去了湖北的确诊人数。
+
 数据来源：https://news.qq.com/zt2020/page/feiyan.htm
 
-数据提取：https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_cn_day_counts
-https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars
+数据提取：
+https://view.inews.qq.com/g2/getOnsInfo?name=disease_h5
+~https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_cn_day_counts~
+~https://view.inews.qq.com/g2/getOnsInfo?name=wuwei_ww_global_vars~
 
 函数图像绘制工具：https://zh.numberempire.com/graphingcalculator.php
 
