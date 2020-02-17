@@ -21,7 +21,7 @@ namespace ConsoleApp1
         public string suspect;
         public string dead;
         public string heal;
-        public string hubeiConfirm;
+        public string notHubei;
     }
     class Program
     {
@@ -51,30 +51,34 @@ namespace ConsoleApp1
             JObject json1 = JsonConvert.DeserializeObject<JObject>(str1);
             JObject json2 = JsonConvert.DeserializeObject<JObject>(json1["data"].ToString());
             List<DataRaw> chinaDayList = json2["chinaDayList"].ToObject<List<DataRaw>>();
-            JArray dailyDeadRateHistory = (JArray)json2["dailyDeadRateHistory"];
+            JArray dailyDeadRateHistory = (JArray)json2["dailyNewAddHistory"];
             Dictionary<string, string> hubeiConfirmDict = new Dictionary<string, string>();
             foreach (var item in dailyDeadRateHistory)
             {
-                hubeiConfirmDict[item["date"].ToString()] = item["hubeiConfirm"].ToString();
+                hubeiConfirmDict[item["date"].ToString()] = item["notHubei"].ToString();
             }
+            List<DataRaw> chinaDayList_2 = new List<DataRaw>();
             foreach (var item in chinaDayList)
             {
                 item.x = DateTime.Parse("2020." + item.date).DayOfYear;
                 if (hubeiConfirmDict.ContainsKey(item.date))
-                    item.hubeiConfirm = hubeiConfirmDict[item.date];
-                else
-                    item.hubeiConfirm = "0";
+                {
+                    item.notHubei = hubeiConfirmDict[item.date];
+                    chinaDayList_2.Add(item);
+                }
             }
+            chinaDayList = chinaDayList_2;
             chinaDayList.Sort((a, b) => { return (int)(a.x - b.x); });
 
             double min = chinaDayList[0].x;
+            DateTime min_date = DateTime.Parse("2020." + chinaDayList[0].date);
             DateTime max_date = DateTime.Parse("2020." + chinaDayList[chinaDayList.Count - 1].date + " 23:59");
             if (DateTime.Now < max_date)
                 chinaDayList.RemoveAt(chinaDayList.Count - 1);
             foreach (var item in chinaDayList)
             {
                 item.x -= min;
-                item.y = int.Parse(item.confirm) - int.Parse(item.hubeiConfirm);
+                item.y = int.Parse(item.notHubei);
             }
             double[] xx = new double[chinaDayList.Count];
             double[] yy = new double[chinaDayList.Count];
@@ -92,7 +96,7 @@ namespace ConsoleApp1
             Console.WriteLine();
 
             //测试：
-            //DateTime date = new DateTime(2020, 2, 1);
+            //DateTime date = new DateTime(2020, 1, 20);
             //double x = (date - min_date).TotalDays;
             //double result = p[0] + p[1] * x + p[2] * Math.Pow(x, 2) + p[3] * Math.Pow(x, 3) + p[4] * Math.Pow(x, 4) + p[5] * Math.Pow(x, 5);
             //Console.WriteLine(date.ToShortDateString() + " 人数：" + (int)result);
