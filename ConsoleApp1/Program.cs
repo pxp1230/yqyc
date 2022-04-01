@@ -25,6 +25,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             string jsFile = null;
+            string dataFile = "";
             DirectoryInfo directoryInfo = new DirectoryInfo(Environment.CurrentDirectory);
             while (directoryInfo.Parent != null)
             {
@@ -33,7 +34,8 @@ namespace ConsoleApp1
                 if (fileInfos.Length == 1)
                 {
                     jsFile = fileInfos[0].FullName;
-                    break;
+                    FileInfo[] fileInfos2 = directoryInfo.GetFiles("data.json", SearchOption.TopDirectoryOnly);
+                    dataFile = fileInfos2[0].FullName;
                 }
             }
             if (jsFile == null)
@@ -41,11 +43,17 @@ namespace ConsoleApp1
                 Console.WriteLine("找不到js文件");
             }
 
-            WebClient webClient = new WebClient();
-            byte[] _str1 = webClient.DownloadData(url1);
-            string str1 = UTF8Encoding.UTF8.GetString(_str1);
+            //WebClient webClient = new WebClient();
+            //byte[] _str1 = webClient.DownloadData(url1);
+            //string str1 = UTF8Encoding.UTF8.GetString(_str1);
+
+            string str1 = File.ReadAllText(dataFile);
+
             JObject json1 = JsonConvert.DeserializeObject<JObject>(str1);
             List<DataRaw> shanghaiDayList = json1["amounts"].ToObject<List<DataRaw>>();
+            shanghaiDayList.Add(new DataRaw { day = "3.29", amount = "5982" });
+            shanghaiDayList.Add(new DataRaw { day = "3.30", amount = "5653" });
+            shanghaiDayList.Add(new DataRaw { day = "3.31", amount = "" + (358 + 4144) });
 
             foreach (var item in shanghaiDayList)
             {
@@ -78,7 +86,7 @@ namespace ConsoleApp1
             {
                 xx[i] = new_shanghaiDayList[i].x;
                 yy[i] = new_shanghaiDayList[i].y;
-                //Console.WriteLine(xx[i] + " " + yy[i]);
+                Console.WriteLine(new_shanghaiDayList[i].day + " " + new_shanghaiDayList[i].amount);
             }
 
             double[] p = Fit.Polynomial(xx, yy, 5);
