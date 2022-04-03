@@ -54,6 +54,8 @@ namespace ConsoleApp1
             shanghaiDayList.Add(new DataRaw { day = "3.29", amount = "5982" });
             shanghaiDayList.Add(new DataRaw { day = "3.30", amount = "5653" });
             shanghaiDayList.Add(new DataRaw { day = "3.31", amount = "" + (358 + 4144) });
+            shanghaiDayList.Add(new DataRaw { day = "4.1", amount = "" + (260 + 6051) });
+            shanghaiDayList.Add(new DataRaw { day = "4.2", amount = "" + (438 + 7788) });
 
             foreach (var item in shanghaiDayList)
             {
